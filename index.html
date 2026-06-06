@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bắt Sao Băng Cùng Kabigon - Đêm Thiên Đăng</title>
+    <title>Bắt Sao Băng Cùng Kabigon</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
 
@@ -262,14 +262,14 @@
 
         <div id="hud">
             <div class="hb"><b id="sv">0</b> / 12 ⭐</div>
-            <div class="hb">Mạng: <b id="lv" style="color: #fda4af;">5</b></div>
+            <div class="hb">Mạng: <b id="lv" style="color: #fda4af;">6</b></div>
             <div class="hb"><b id="tv">30</b>s</div>
         </div>
 
         <div id="ss">
             <div class="panel-content">
                 <div class="stitle">Giấc Mơ Của Kabigon ✨</div>
-                <div class="ssub">Hãy dẫn bé Kabigon béo đi hứng sao.<br>Thu thập đủ 12 ngôi sao để phép màu xuất hiện
+                <div class="ssub">Hãy dẫn bé Kabigon béo đi hái sao.<br>Thu thập đủ 12 ngôi sao để phép màu xuất hiện
                     nà!</div>
                 <div class="progress-bar" style="opacity:0">
                     <div class="progress-fill" style="width:0%"></div>
@@ -301,7 +301,7 @@
 
             let lanterns = [], birds = [], bgDecor = { trees: [], decorations: [] };
             let megaStar = { x: 0, y: 0, vx: 0, vy: 0, alpha: 0, active: false };
-            let score = 0, lives = 5, timeLeft = 30;
+            let score = 0, lives = 6, timeLeft = 30;
             let running = false, over = false, isWinAnimation = false, winTime = 0;
 
             let mx = 200, my = 400;
@@ -310,9 +310,33 @@
 
             // Quản lý trạng thái hiển thị câu chuyện hậu màn chơi thắng
             let winStep = 1;
-
             let lastT = 0, spawnT = 0, gameT = 0, raf;
 
+            // ================= MỚI: CẤU HÌNH ÂM THANH =================
+            const bgmSfx = new Audio('bgm.mp3'); bgmSfx.loop = true; bgmSfx.volume = 0.4;
+            const scoredSfx = new Audio('scored.mp3'); scoredSfx.volume = 0.5;
+            const missedSfx = new Audio('missed.mp3'); missedSfx.volume = 0.5;
+            const windSfx = new Audio('wind_shimmer.mp3'); windSfx.volume = 0.5;
+            const wooshSfx = new Audio('star_woosh.mp3'); wooshSfx.volume = 0.6;
+            const clickSfx = new Audio('click.mp3'); clickSfx.volume = 0.5;
+            // Cờ kiểm soát âm thanh không bị lặp lại trong vòng lặp game
+            let windPlay = false, wooshPlay = false;
+            bgmSfx.play().catch(() => {
+                // Nếu bị chặn, sẽ chờ người dùng chạm vào màn hình lần đầu tiên để phát
+                const startBGM = () => {
+                    bgmSfx.play().catch(e => console.log(e));
+                    // Phát xong thì gỡ sự kiện này đi để không bị lặp lại
+                    document.removeEventListener('click', startBGM);
+                    document.removeEventListener('touchstart', startBGM);
+                };
+                document.addEventListener('click', startBGM);
+                document.addEventListener('touchstart', startBGM);
+            });
+            // ==========================================================
+            function playClickSound() {
+                clickSfx.currentTime = 0; // Reset lại từ đầu để bấm nhanh không bị miss tiếng
+                clickSfx.play().catch(e => console.log(e));
+            }
             function getGroundY(x) {
                 return H - 40 + Math.sin(x * 0.008) * 12 + Math.cos(x * 0.003) * 8;
             }
@@ -722,6 +746,10 @@
                             if (s.x > 0 && s.x < W && !s.missed) {
                                 s.missed = true;
                                 if (!isWinAnimation) {
+                                    // BẬT ÂM THANH TRƯỢT SAO
+                                    missedSfx.currentTime = 0;
+                                    missedSfx.play().catch(e => console.log(e));
+
                                     chibiEmotion = 'sad'; emotionTimer = 40;
                                     lives = Math.max(0, lives - 1); lvEl.textContent = lives;
                                     if (lives <= 0 && !over) triggerLose();
@@ -733,6 +761,10 @@
 
                         if (dist < 55 && !isWinAnimation) {
                             s.caught = true;
+                            // BẬT ÂM THANH BẮT TRÚNG SAO
+                            scoredSfx.currentTime = 0;
+                            scoredSfx.play().catch(e => console.log(e));
+
                             chibiEmotion = 'happy'; emotionTimer = 40;
                             score = Math.min(score + 1, 12); svEl.textContent = score;
                             updateProgress();
@@ -799,9 +831,12 @@
             function startWinAnimation() {
                 isWinAnimation = true; over = true;
                 winTime = 0; hud.style.opacity = '0';
-                winStep = 1; // Reset câu thoại về bước đầu tiên
+                winStep = 1;
                 lanterns = []; birds = [];
                 megaStar = { x: W + 50, y: 30, vx: -5, vy: 1.5, alpha: 0, active: false };
+
+                // MỚI: Reset trạng thái âm thanh chiến thắng & Bật to nhạc nền
+                windPlay = false; wooshPlay = false;
 
                 for (let i = 0; i < 150; i++) {
                     let scale = Math.random() > 0.8 ? (Math.random() * 4 + 6) : (Math.random() * 3 + 2);
@@ -823,7 +858,19 @@
                 winTime += dt / 1000;
                 fx.clearRect(0, 0, W, H);
 
+                // MỚI: Giây 1.5 - Phát tiếng chuông gió lấp lánh khi đèn lồng bay lên
+                if (winTime > 1.5 && !windPlay) {
+                    windSfx.play().catch(e => console.log(e));
+                    windPlay = true;
+                }
+
+                // MỚI: Giây 3.5 - Phát tiếng bay lướt qua khi ngôi sao khổng lồ xuất hiện
                 if (winTime > 3.5) {
+                    if (!wooshPlay) {
+                        wooshSfx.play().catch(e => console.log(e));
+                        wooshPlay = true;
+                    }
+
                     megaStar.active = true; megaStar.x += megaStar.vx; megaStar.y += megaStar.vy;
                     if (megaStar.alpha < 1) megaStar.alpha += 0.05;
                     let grad = fx.createLinearGradient(megaStar.x, megaStar.y, megaStar.x - megaStar.vx * 40, megaStar.y - megaStar.vy * 40);
@@ -851,11 +898,11 @@
                 }
 
                 if (winTime > 6 && ws.style.display !== 'flex') {
-                    // Cài đặt hiển thị nội dung câu thoại bước 1
+                    // MỚI: Giây thứ 6 - Phát tiếng chuyển tiếp khi bảng thông báo chiến thắng xuất hiện
                     document.getElementById('wt').textContent = 'Gửi bé... ✨';
                     document.getElementById('cm').innerHTML = "Ngàn ngọn đèn trời mang theo lời hồi đáp...";
                     document.getElementById('yb').textContent = 'Tiếp tục... ✨';
-                    document.getElementById('nb').style.display = 'none'; // Ẩn nút từ chối ở bước đầu
+                    document.getElementById('nb').style.display = 'none';
 
                     ws.style.display = 'flex';
                     setTimeout(() => ws.style.opacity = '1', 50);
@@ -871,7 +918,7 @@
                     document.getElementById('wt').style.color = '#fff';
                     document.getElementById('cm').innerHTML = 'Thử lại lần nữa để gọi phép màu cùng Kabigon nha :3 Bé ơi cố lên!!!';
                     document.getElementById('yb').textContent = 'Thử lại lần nữa :3';
-                    document.getElementById('yb').onclick = () => { ws.style.display = 'none'; startGame(); };
+                    document.getElementById('yb').onclick = () => { ws.style.display = 'none'; playClickSound(); startGame(); };
                     document.getElementById('nb').style.display = 'none';
                 }, 500);
             }
@@ -927,25 +974,31 @@
             }
 
             function startGame() {
-                score = 0; lives = 5; timeLeft = 30;
+                score = 0; lives = 6; timeLeft = 30;
                 shooters = []; particles = []; catcherTrail = []; lanterns = []; birds = [];
                 over = false; isWinAnimation = false; spawnT = 0; gameT = 0;
                 chibiEmotion = 'normal'; emotionTimer = 0;
-                svEl.textContent = '0'; lvEl.textContent = '5'; tvEl.textContent = '30';
+                svEl.textContent = '0'; lvEl.textContent = '6'; tvEl.textContent = '30';
                 hud.style.opacity = '1';
                 fx.clearRect(0, 0, W, H);
                 updateProgress();
                 running = true; lastT = performance.now();
+                bgmSfx.volume = 0.4; // Trả nhạc nền về mức êm dịu khi bắt đầu
                 raf = requestAnimationFrame(loop);
             }
 
             document.getElementById('sb').onclick = () => {
+                playClickSound();
+                // MỚI: Bật nhạc nền BGM khi bấm nút bắt đầu
+                bgmSfx.play().catch(e => console.log("Trình duyệt chặn autoplay audio", e));
+
                 ss.style.opacity = '0';
                 setTimeout(() => { ss.style.display = 'none'; startGame(); }, 800);
             };
 
             // === XỬ LÝ SỰ KIỆN ĐIỀU HƯỚNG DIALOGUE KHI THẮNG GAME ===
             document.getElementById('yb').onclick = () => {
+                playClickSound();
                 if (score >= 12) {
                     if (winStep === 1) {
                         winStep = 2;
@@ -983,7 +1036,6 @@
                         nb.style.display = 'inline-block';
                         nb.style.position = 'static';
                     } else if (winStep === 7) {
-                        // Đã sửa /n thành <br> giúp xuống dòng mượt mà
                         document.getElementById('wt').innerHTML = 'Awww!!!<br>Thiệt là hạnh phúc quá đi à :3';
                         document.getElementById('cm').innerHTML = 'Xin cảm ơn bé vì đã trở thành ngôi sao sáng nhất trong lòng anh! Hy vọng chúng mình cùng tạo nên thiệt là nhiều kỷ niệm đẹp nà :3';
                         document.getElementById('yb').style.display = 'none';
@@ -1011,35 +1063,14 @@
 
             // Click vào nút cũng sẽ tự chạy đi
             document.getElementById('nb').onclick = () => {
+                playClickSound();
                 runawayButton();
             };
 
-            // Rê chuột vào cũng tự chạy đi
+            // Rê chuột vào cũng tự chạy đi (Bật sẵn để chạy mượt cả trên PC)
             // document.getElementById('nb').onmouseenter = () => {
             //     if (winStep === 7) {
             //         runawayButton();
-            //     }
-            // };
-
-            // document.getElementById('nb').onclick = () => {
-            //     // Dự phòng nếu bằng cách nào đó click được nút trốn
-            //     const nb = document.getElementById('nb');
-            //     nb.style.position = 'absolute';
-            //     const maxX = ws.clientWidth - nb.clientWidth - 40;
-            //     const maxY = ws.clientHeight - nb.clientHeight - 40;
-            //     nb.style.left = Math.max(20, Math.random() * maxX) + 'px';
-            //     nb.style.top = Math.max(20, Math.random() * maxY) + 'px';
-            // };
-
-            // Tạo hiệu ứng né chuột cho nút "Để nghĩ xíu..."
-            // document.getElementById('nb').onmouseenter = () => {
-            //     if (winStep === 7) {
-            //         const nb = document.getElementById('nb');
-            //         nb.style.position = 'absolute';
-            //         const maxX = ws.clientWidth - nb.clientWidth - 40;
-            //         const maxY = ws.clientHeight - nb.clientHeight - 40;
-            //         nb.style.left = Math.max(20, Math.random() * maxX) + 'px';
-            //         nb.style.top = Math.max(20, Math.random() * maxY) + 'px';
             //     }
             // };
 

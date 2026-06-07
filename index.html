@@ -280,7 +280,7 @@
 
         <div id="ws">
             <div class="panel-content">
-                <div class="stitle" id="wt" style="color: #fde68a;">Gửi Bé... 🌠 ✨</div>
+                <div class="stitle" id="wt" style="color: #fde68a;">Gửi Bé Trăm... 🌠 ✨</div>
                 <div class="ctext" id="cm" style="color: #fff;"></div>
                 <div>
                     <button class="ybtn" id="yb">Tiếp tục... ✨</button>
@@ -899,7 +899,7 @@
 
                 if (winTime > 6 && ws.style.display !== 'flex') {
                     // MỚI: Giây thứ 6 - Phát tiếng chuyển tiếp khi bảng thông báo chiến thắng xuất hiện
-                    document.getElementById('wt').textContent = 'Gửi bé... ✨';
+                    document.getElementById('wt').textContent = 'Gửi bé Trăm... ✨';
                     document.getElementById('cm').innerHTML = "Ngàn ngọn đèn trời mang theo lời hồi đáp...";
                     document.getElementById('yb').textContent = 'Tiếp tục... ✨';
                     document.getElementById('nb').style.display = 'none';
@@ -1014,7 +1014,7 @@
                         document.getElementById('cm').innerHTML = "Bởi vì 12 ngôi sao này đại diện cho 12 tháng trong năm anh muốn ở cạnh bé :3";
                     } else if (winStep === 5) {
                         winStep = 6;
-                        document.getElementById('cm').innerHTML = "Và hôm nay anh muốn tự tay kích hoạt<br><span class='highlight-star'>'ngôi sao thứ 13'</span>, ngôi sao đó chính là bé!";
+                        document.getElementById('cm').innerHTML = "Và hôm nay anh muốn tự tay kích hoạt<br><span class='highlight-star'>'ngôi sao thứ 13'</span>, ngôi sao đó chính là <span class='highlight-star'>bé Trăm siu cấp đáng iu</span>!";
                         for (let i = 0; i < 40; i++) {
                             particles.push({
                                 x: W / 2 + (Math.random() - 0.5) * 200,
@@ -1029,7 +1029,7 @@
                         }
                     } else if (winStep === 6) {
                         winStep = 7;
-                        document.getElementById('cm').innerHTML = "Bé có muốn tiến thêm một bước, làm <br><span class='highlight-star'>ngôi sao sáng nhất trong lòng anh</span> hong?";
+                        document.getElementById('cm').innerHTML = "Liệu bé Trăm có muốn tiến thêm một bước, làm <br><span class='highlight-star'>ngôi sao sáng nhất trong lòng anh</span> hong?";
                         document.getElementById('yb').textContent = 'Có ạ :>>';
 
                         const nb = document.getElementById('nb');

@@ -432,10 +432,10 @@ function drawWinAnimation(dt) {
                 { l1: "Cơ mà :3 Bé có biết...", l2: "Vì sao anh chọn con số 24 này hong?" },
                 { l1: "Vì nó tượng trưng cho...", l2: "24 giờ trong một ngày." },
                 { l1: "Nó làm anh nhớ tới những hôm...", l2: "tụi mình được gặp nhau cả ngày." },
-                { l1: "Hong hiểu sao những ngày dài bên cạnh bé", l2: "anh luôn thấy thời gian trôi qua thiệt nhanh." },
+                { l1: "Hong hiểu sao những ngày dài bên cạnh bé,", l2: "anh luôn thấy thời gian trôi qua thiệt nhanh." },
                 { l1: "Cứ như là anh mới gặp em được vài phút,", l2: "thì lại đến lúc phải chào tạm biệt..." },
-                { l1: "Ngôi sao thứ 24 này", l2: "anh muốn dành để lưu giữ ngày \"hôm nay\"." },
-                { l1: "Ngày mà Những điều bình thường nhất...", l2: "bỗng hóa thành kỷ niệm." },
+                { l1: "Ngôi sao thứ 24 này...", l2: "anh muốn dành để lưu giữ ngày \"hôm nay\"." },
+                { l1: "Ngày mà những điều bình thường nhất...", l2: "bỗng hóa thành kỷ niệm." },
                 { l1: "Anh cảm ơn bé!", l2: "Vì đã cho anh thêm biết bao ngày như vậy." },
                 { l1: "Mong rằng từ nay về sau tụi mình sẽ cùng nhau", l2: "tạo nên thật nhiều '24 giờ' tuyệt đẹp như thế nữa. ✨" }
             ];

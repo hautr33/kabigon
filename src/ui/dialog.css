@@ -1,0 +1,62 @@
+.dialog-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: radial-gradient(ellipse at center, rgba(10, 6, 30, 0.2), rgba(5, 3, 20, 0.5));
+    backdrop-filter: blur(var(--bd, 8px));
+    -webkit-backdrop-filter: blur(var(--bd, 8px));
+}
+
+.dialog-card {
+    width: min(540px, calc(100vw - 32px));
+    padding: 46px 40px 36px;
+    text-align: center;
+}
+
+.dialog-title {
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #fff;
+    text-shadow: 0 0 14px rgba(196, 181, 253, 0.8), 0 0 28px rgba(167, 139, 250, 0.5);
+    margin-bottom: 18px;
+}
+
+.dialog-title.gold {
+    color: var(--gold);
+    text-shadow: 0 0 14px rgba(251, 191, 36, 0.75), 0 0 34px rgba(245, 158, 11, 0.45);
+}
+
+.dialog-body {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.85;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.dialog-hint {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--lilac);
+    opacity: 0.8;
+}
+
+.dialog-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.dialog-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-bottom: 12px;
+}

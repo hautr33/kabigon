@@ -11,7 +11,7 @@ npm run typecheck  # kiểm tra kiểu TypeScript
 npm run build      # build ra thư mục dist/
 ```
 
-## Cách tổ chức
+## Cách tổ chức 
 
 - **PixiJS** vẽ phần "thế giới" (bầu trời, sao băng, nhân vật, hiệu ứng) trên một canvas toàn màn hình.
   Vòng lặp của Pixi chạy theo `gsap.ticker` nên tween và khung hình luôn khớp nhau → mượt.

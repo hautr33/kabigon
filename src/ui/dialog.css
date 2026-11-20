@@ -10,38 +10,87 @@
     -webkit-backdrop-filter: blur(var(--bd, 8px));
 }
 
-.dialog-card {
-    width: min(540px, calc(100vw - 32px));
-    padding: 46px 40px 36px;
+/* Đặt sát dưới: để lộ cutscene phía trên, nền chỉ tối dần ở phần dưới màn hình */
+.dialog-wrap.bottom {
+    place-items: end center;
+    padding-bottom: max(24px, 5vh);
+    background: linear-gradient(to bottom, transparent 40%, rgba(5, 3, 20, 0.55));
+}
+
+/* Đặt ở một độ cao cố định (vd: ngay dưới mặt trăng), giữa theo chiều ngang */
+.dialog-wrap.at-top {
+    place-items: start center;
+    padding-top: var(--top);
+    background: radial-gradient(ellipse at 50% 60%, rgba(5, 3, 20, 0.35), transparent 70%);
+}
+
+/* Nền kính tối & đặc hơn để chữ luôn dễ đọc dù phía sau là trăng sáng hay pháo hoa
+   (.glass.dialog-card: cần 2 class để thắng nền mặc định của .glass) */
+.glass.dialog-card {
+    width: min(560px, calc(100vw - 32px));
+    padding: 40px 44px 34px;
     text-align: center;
+    background: linear-gradient(180deg, rgba(34, 24, 74, 0.86), rgba(16, 11, 40, 0.9));
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(196, 181, 253, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Nút ẩn khung thoại — hiện ra sau khi chữ đã hiện xong */
+.dialog-card .dialog-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: rgba(224, 212, 252, 0.8);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    transition: background 0.2s, color 0.2s, transform 0.2s var(--ease);
+    animation: fade-in 0.6s ease-out 1.4s both;
+}
+
+.dialog-card .dialog-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.14);
+    transform: rotate(90deg);
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
 }
 
 .dialog-title {
-    font-size: 27px;
+    font-size: 28px;
     font-weight: 700;
     line-height: 1.35;
     color: #fff;
-    text-shadow: 0 0 14px rgba(196, 181, 253, 0.8), 0 0 28px rgba(167, 139, 250, 0.5);
-    margin-bottom: 18px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45), 0 0 22px rgba(167, 139, 250, 0.45);
+    margin-bottom: 16px;
+    text-wrap: balance;
 }
 
 .dialog-title.gold {
     color: var(--gold);
-    text-shadow: 0 0 14px rgba(251, 191, 36, 0.75), 0 0 34px rgba(245, 158, 11, 0.45);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45), 0 0 22px rgba(245, 158, 11, 0.45);
 }
 
 .dialog-body {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 600;
-    line-height: 1.85;
-    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.8;
+    color: #fff;
+    text-wrap: pretty;
 }
 
 .dialog-hint {
-    margin-top: 14px;
-    font-size: 13px;
+    margin-top: 16px;
+    font-size: 14px;
     color: var(--lilac);
-    opacity: 0.8;
 }
 
 .dialog-buttons {
@@ -57,6 +106,6 @@
     font-weight: 700;
     letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: #a78bfa;
+    color: #c4b5fd;
     margin-bottom: 12px;
 }

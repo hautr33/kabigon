@@ -18,6 +18,8 @@ export class NightSky {
     private stars: { s: Sprite; base: number; tw: number; speed: number }[] = [];
     private sparkles: { s: Sprite; t: number; period: number; size: number }[] = [];
     private scenery?: Sprite;
+    private lightLayer = new Container(); // hoa phát sáng, đèn trên cây, sương trôi (ngay trên cảnh đồi)
+    private lights: { s: Sprite; base: number; t: number; speed: number }[] = [];
     private fireflies!: Emitter;
     readonly dust: Emitter;
     private comets = new Map<Comet, gsap.core.Tween>();
@@ -50,6 +52,8 @@ export class NightSky {
         this.tweens = [];
         this.far.removeChildren().forEach((c) => c.destroy());
         this.stars.forEach((st) => st.s.destroy());
+        this.lightLayer.removeChildren().forEach((c) => c.destroy());
+        this.lights = [];
         this.sparkles.forEach((sp) => sp.s.destroy());
         this.stars = [];
         this.sparkles = [];
@@ -60,9 +64,9 @@ export class NightSky {
 
         // 1. Cực quang: 3 vầng sáng lớn trôi chậm
         const auroras = [
-            { x: 0.22, y: -0.05, r: 0.55, c: 0x5b6cff, a: 0.42, d: 18 },
-            { x: 0.82, y: 0.02, r: 0.48, c: 0x8b3dff, a: 0.42, d: 22 },
-            { x: 0.52, y: 0.4, r: 0.4, c: 0xd946ef, a: 0.14, d: 26 },
+            { x: 0.22, y: -0.05, r: 0.55, c: 0x5b6cff, a: 0.3, d: 18 },
+            { x: 0.82, y: 0.02, r: 0.48, c: 0x8b3dff, a: 0.3, d: 22 },
+            { x: 0.52, y: 0.4, r: 0.4, c: 0xd946ef, a: 0.1, d: 26 },
         ];
         const big = Math.max(W, H);
         auroras.forEach((a, i) => {
@@ -76,6 +80,35 @@ export class NightSky {
             this.tweens.push(gsap.to(s.scale, { x: s.scale.x * 1.18, y: s.scale.y * 1.18, duration: a.d, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: -i * 4 }));
         });
 
+        // 1b. Ánh hồng tím ở đường chân trời + dải Ngân Hà chéo qua trời
+        for (const [tint, alpha, sy] of [[0xf472b6, 0.1, 0.3], [0x8b5cf6, 0.13, 0.42]] as const) {
+            const hz = new Sprite(tex('soft-glow'));
+            hz.anchor.set(0.5); hz.tint = tint; hz.alpha = alpha; hz.blendMode = 'add';
+            hz.position.set(W / 2, H * 0.88);
+            hz.scale.set((W * 1.3) / 256, (H * sy * 2) / 256);
+            this.far.addChild(hz);
+        }
+        const milky = new Sprite(tex('milky-way'));
+        milky.anchor.set(0.5); milky.blendMode = 'add'; milky.alpha = 0.55;
+        milky.position.set(W * 0.5, H * 0.3);
+        milky.rotation = -0.38;
+        milky.scale.set((Math.hypot(W, H) * 1.15) / 512, (230 * u) / 160);
+        this.far.addChild(milky);
+        this.tweens.push(gsap.to(milky, { alpha: 0.4, duration: 6, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
+        // bụi sao li ti dày đặc dọc theo dải Ngân Hà (sprite thật, không bị kéo giãn)
+        const bandLen = Math.hypot(W, H) * 0.95;
+        for (let i = 0; i < Math.min(260, Math.round(bandLen / 6)); i++) {
+            const along = (Math.random() - 0.5) * bandLen;
+            const across = (Math.random() + Math.random() + Math.random() - 1.5) * 55 * u;
+            const s = new Sprite(tex('glow-dot'));
+            s.anchor.set(0.5); s.blendMode = 'add';
+            s.tint = [0xffffff, 0xe9d5ff, 0xfbcfe8, 0xc7e3ff][i % 4];
+            s.position.set(milky.x + Math.cos(milky.rotation) * along - Math.sin(milky.rotation) * across, milky.y + Math.sin(milky.rotation) * along + Math.cos(milky.rotation) * across);
+            s.scale.set(((0.6 + Math.random() * 1.1) * u * 4) / 64);
+            this.mid.addChildAt(s, 0);
+            this.stars.push({ s, base: 0.25 + Math.random() * 0.5, tw: Math.random() * Math.PI * 2, speed: (Math.PI * 2) / (2500 + Math.random() * 4000) });
+        }
+
         // 2. Sao nền lấp lánh (dày hơn ở phía trên)
         const count = Math.min(420, Math.round((W * H) / 2600));
         for (let i = 0; i < count; i++) {
@@ -84,7 +117,7 @@ export class NightSky {
             const s = new Sprite(tex('glow-dot'));
             s.anchor.set(0.5);
             s.blendMode = 'add';
-            s.tint = Math.random() > 0.5 ? 0xffffff : 0xd8ccff;
+            s.tint = [0xffffff, 0xffffff, 0xd8ccff, 0xffe4f1, 0xfef3c7, 0xc7e3ff][Math.floor(Math.random() * 6)];
             s.position.set(Math.random() * (W + 60) - 30, Math.pow(Math.random(), 1.4) * H * 0.72);
             s.scale.set((size * u * 4) / 64);
             this.mid.addChildAt(s, 0);
@@ -104,9 +137,32 @@ export class NightSky {
 
         // 4. Đồi, cây, hoa (vẽ sẵn thành 1 texture)
         const margin = this.opts.sceneryMargin ?? 0;
-        const { texture, top } = bakeScenery(this.opts.sceneryKey ?? 'scenery', m, margin);
-        if (!this.scenery) { this.scenery = new Sprite(texture); this.near.addChildAt(this.scenery, 0); } else this.scenery.texture = texture;
+        const { texture, top, lights } = bakeScenery(this.opts.sceneryKey ?? 'scenery', m, margin);
+        if (!this.scenery) {
+            this.scenery = new Sprite(texture);
+            this.near.addChildAt(this.scenery, 0);
+            this.near.addChildAt(this.lightLayer, 1);
+        } else this.scenery.texture = texture;
         this.scenery.position.set(-margin, top);
+
+        // 4b. Hoa phát sáng & đèn trên cây nhấp nháy
+        for (const l of lights) {
+            const s = new Sprite(tex('glow-dot'));
+            s.anchor.set(0.5); s.blendMode = 'add'; s.tint = l.tint;
+            s.position.set(l.x, l.y); s.scale.set((l.size * 2) / 64);
+            this.lightLayer.addChild(s);
+            this.lights.push({ s, base: 0.45 + Math.random() * 0.4, t: Math.random() * Math.PI * 2, speed: (Math.PI * 2) / (1600 + Math.random() * 2600) });
+        }
+        // 4c. Sương mỏng trôi chậm sát mặt đất
+        for (let i = 0; i < 4; i++) {
+            const fog = new Sprite(tex('soft-glow'));
+            fog.anchor.set(0.5); fog.tint = 0xc4b5fd; fog.alpha = 0.1; fog.blendMode = 'add';
+            const fx = W * (i / 3);
+            fog.position.set(fx, m.ground(fx) - 10 * u);
+            fog.scale.set((W * 0.45) / 128, (55 * u) / 128);
+            this.lightLayer.addChild(fog);
+            this.tweens.push(gsap.to(fog, { x: fx + (i % 2 ? -1 : 1) * 90 * u, alpha: 0.16, duration: 14 + i * 3, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
+        }
 
         // 5. Đom đóm / hạt sáng bay lên
         this.fireflies?.destroy();
@@ -135,6 +191,10 @@ export class NightSky {
             sp.s.alpha = e * k;
             sp.s.scale.set((sp.size / 32) * (0.2 + 0.8 * e));
             sp.s.rotation = (Math.PI / 4) * e;
+        }
+        for (const l of this.lights) {
+            l.t += l.speed * dtMs;
+            l.s.alpha = l.base * (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(l.t))) * k;
         }
         this.fireflies.update(dtMs);
         this.dust.update(dtMs);
@@ -171,13 +231,16 @@ export class NightSky {
     }
 
     // Sao băng bay thẳng với vận tốc không đổi; chỉ độ sáng hiện/tắt dần → luôn mượt
-    shootingStar() {
+    //   maxY: có thì sao băng chỉ bay trong dải phía trên độ cao này (vd: không bay ngang qua chữ)
+    shootingStar(maxY?: number) {
         const { W, H, u } = this.m;
         const fromLeft = Math.random() < 0.35;
         const x0 = fromLeft ? Math.random() * W * 0.5 : W * 0.35 + Math.random() * W * 0.7;
-        const y0 = Math.random() * H * 0.28 - 20 * u;
-        const dist = Math.min(W * 0.55, 680 * u) * (0.75 + Math.random() * 0.45);
-        const ang = (fromLeft ? 0 : Math.PI) + (fromLeft ? 1 : -1) * (0.42 + Math.random() * 0.22);
+        const y0 = maxY !== undefined ? Math.random() * maxY * 0.45 - 10 * u : Math.random() * H * 0.28 - 20 * u;
+        let dist = Math.min(W * 0.55, 680 * u) * (0.75 + Math.random() * 0.45);
+        const tilt = maxY !== undefined ? 0.1 + Math.random() * 0.14 : 0.42 + Math.random() * 0.22;
+        if (maxY !== undefined) dist = Math.min(dist, Math.max(120 * u, (maxY - y0) / Math.sin(tilt)));
+        const ang = (fromLeft ? 0 : Math.PI) + (fromLeft ? 1 : -1) * tilt;
         const x1 = x0 + Math.cos(ang) * dist, y1 = y0 + Math.sin(ang) * dist;
         const palette: [number, number][] = [[0xc4b5fd, 0xffffff], [0xa5b4fc, 0xffffff], [0xf0abfc, 0xfff1fb], [0xfcd34d, 0xfffbeb]];
         const [tailTint, headTint] = palette[Math.floor(Math.random() * palette.length)];

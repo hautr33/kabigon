@@ -1,0 +1,1529 @@
+/* =========================================================================
+   Theme "Tiệm Bánh Corgi" — tông kem, hồng pastel, nâu sô-cô-la
+   ========================================================================= */
+.bk-screen {
+    --bk-cream: #fff8ef;
+    --bk-pink: #ef8f8a;
+    --bk-pink-soft: #fde3dd;
+    --bk-brown: #5b3a29;
+    --bk-mint: #c6daa8;
+    display: grid;
+    place-items: center;
+    color: var(--bk-brown);
+}
+
+.bk-stage {
+    display: grid;
+    place-items: center;
+    padding: 70px 24px 24px;
+    animation: bk-in 0.7s var(--ease) both;
+}
+
+@keyframes bk-in {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.97);
+    }
+}
+
+.bk-card {
+    position: relative;
+    width: min(760px, calc(100vw - 32px));
+    padding: 22px 28px 26px;
+    border-radius: 30px;
+    background: linear-gradient(180deg, #fffdf8, var(--bk-cream));
+    box-shadow: 0 24px 60px rgba(120, 80, 50, 0.22), 0 0 0 4px rgba(255, 255, 255, 0.7), inset 0 -6px 0 rgba(240, 190, 170, 0.25);
+}
+
+/* ---------- Corgi + bong bóng thoại ---------- */
+.bk-cat-talk {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.bk-cat {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    animation: bk-bob 2.6s ease-in-out infinite;
+    transform-origin: 50% 90%;
+}
+
+.bk-cat.yes {
+    animation: bk-nod 0.5s ease-in-out 2;
+}
+
+.bk-cat.no {
+    animation: bk-shake 0.45s ease-in-out 2;
+}
+
+.bk-cat.love {
+    animation: bk-hop 0.6s ease-in-out infinite;
+}
+
+@keyframes bk-bob {
+    50% {
+        transform: translateY(-3px) scale(1.02, 0.98);
+    }
+}
+
+@keyframes bk-nod {
+    50% {
+        transform: rotate(6deg) translateY(3px);
+    }
+}
+
+@keyframes bk-shake {
+
+    25% {
+        transform: rotate(-7deg);
+    }
+
+    75% {
+        transform: rotate(7deg);
+    }
+}
+
+@keyframes bk-hop {
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.bk-bubble {
+    position: relative;
+    flex: 1;
+    padding: 12px 18px;
+    border-radius: 20px;
+    background: #fff;
+    border: 2px solid var(--bk-pink-soft);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    animation: bk-pop 0.35s var(--ease);
+}
+
+.bk-bubble::before {
+    content: '';
+    position: absolute;
+    left: -11px;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    margin-top: -9px;
+    background: #fff;
+    border-left: 2px solid var(--bk-pink-soft);
+    border-bottom: 2px solid var(--bk-pink-soft);
+    transform: rotate(45deg);
+}
+
+.bk-bubble .hl {
+    color: #d96f6c;
+    text-shadow: none;
+    animation: none;
+}
+
+@keyframes bk-pop {
+    from {
+        transform: scale(0.92);
+        opacity: 0.4;
+    }
+}
+
+/* ---------- Nút hồng ---------- */
+.btn-pink {
+    background: linear-gradient(135deg, #ef8f8a, #f6b7ae);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(140, 70, 50, 0.35);
+    box-shadow: 0 6px 18px rgba(217, 111, 108, 0.45), inset 0 -3px 0 rgba(160, 80, 60, 0.25);
+}
+
+.btn-pink:hover {
+    box-shadow: 0 0 0 4px rgba(239, 143, 138, 0.25), 0 10px 26px rgba(217, 111, 108, 0.5);
+}
+
+.btn-pink:disabled {
+    filter: grayscale(0.6);
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+}
+
+/* ---------- Bảng chọn (nguyên liệu / topping) ---------- */
+.bk-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.bk-palette {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.bk-ing-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 76px;
+    padding: 8px 4px 6px;
+    border-radius: 16px;
+    background: #fff;
+    border: 2px solid #f7e4d6;
+    color: var(--bk-brown);
+    font-size: 12px;
+    font-weight: 700;
+    transition: transform 0.2s var(--ease), border-color 0.2s, box-shadow 0.2s;
+}
+
+.bk-ing-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    border-color: var(--bk-pink);
+    box-shadow: 0 8px 18px rgba(239, 143, 138, 0.25);
+}
+
+.bk-ing-btn.active {
+    border-color: var(--bk-pink);
+    background: var(--bk-pink-soft);
+    transform: translateY(-3px);
+}
+
+.bk-ing-btn.used {
+    opacity: 0.35;
+}
+
+.bk-ing,
+.bk-top {
+    width: 40px;
+    height: 40px;
+}
+
+/* ---------- Màn 4: bảng đoán ---------- */
+.bk-recipe-body {
+    display: flex;
+    gap: 26px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.bk-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bk-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 16px;
+    transition: background 0.3s;
+}
+
+.bk-row.current {
+    background: var(--bk-pink-soft);
+}
+
+.bk-row.reveal {
+    background: #fff3c4;
+}
+
+.bk-row-no {
+    width: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #c9a28c;
+    text-align: center;
+}
+
+.bk-slot {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px dashed #f0d8c8;
+    padding: 0;
+}
+
+.bk-slot.filled {
+    border-style: solid;
+    border-color: #f6c9bf;
+    animation: bk-pop 0.3s var(--ease);
+}
+
+.bk-slot .bk-ing {
+    width: 34px;
+    height: 34px;
+}
+
+.bk-row.current .bk-slot.filled {
+    cursor: pointer;
+}
+
+.bk-pegs {
+    display: grid;
+    grid-template-columns: repeat(2, 12px);
+    gap: 3px;
+    margin-left: 6px;
+}
+
+.bk-peg {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #f3e6dc;
+}
+
+.bk-peg.exact {
+    background: #f2b84b;
+    box-shadow: 0 0 0 2px #fff, 0 0 6px rgba(255, 201, 60, 0.8);
+}
+
+.bk-peg.near {
+    background: #fff;
+    box-shadow: inset 0 0 0 3px var(--bk-pink);
+}
+
+.bk-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a98a78;
+}
+
+.bk-bowl svg {
+    width: 120px;
+    height: 80px;
+}
+
+/* ---------- Màn 5: mặt bánh ---------- */
+.bk-decorate-body {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    align-items: center;
+}
+
+.bk-cake {
+    position: relative;
+    width: 372px;
+    aspect-ratio: 6 / 5.4;
+    border-radius: 50%;
+    padding: 18px;
+    background: radial-gradient(circle at 50% 40%, #fffaf3, #ffe9d6 70%, #f6d2b4);
+    box-shadow: 0 14px 0 #f0c09c, 0 14px 0 4px #fde3dd, 0 30px 40px rgba(180, 100, 80, 0.25), inset 0 0 0 8px #f6c9bf;
+}
+
+.bk-cake-grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+}
+
+.bk-cell {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    background: transparent;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.bk-cell.off {
+    visibility: hidden;
+}
+
+.bk-cell.mine {
+    background: rgba(239, 143, 138, 0.08);
+    box-shadow: inset 0 0 0 2px rgba(239, 143, 138, 0.18);
+}
+
+.bk-cell.mine:hover:not(:disabled) {
+    background: rgba(239, 143, 138, 0.2);
+}
+
+.bk-cell .bk-top {
+    width: 40px;
+    height: 40px;
+}
+
+.bk-pop {
+    display: grid;
+    animation: bk-pop 0.3s var(--ease);
+}
+
+.bk-mirror {
+    position: absolute;
+    top: 14%;
+    bottom: 14%;
+    left: 50%;
+    border-left: 3px dashed rgba(239, 143, 138, 0.55);
+    pointer-events: none;
+}
+
+.bk-cake.done .bk-mirror {
+    opacity: 0;
+    transition: opacity 0.6s;
+}
+
+.bk-cake-msg {
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    translate: -50% 0;
+    padding: 4px 18px;
+    border-radius: 999px;
+    background: #fff;
+    font-family: 'Dancing Script', cursive;
+    font-size: 26px;
+    font-weight: 700;
+    color: #d96f6c;
+    box-shadow: 0 6px 16px rgba(239, 143, 138, 0.35);
+    animation: bk-pop 0.6s var(--ease);
+}
+
+.bk-cake-msg span {
+    color: #ff5d7a;
+}
+
+.bk-palette.tools {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* ---------- Màn 6: bản đồ đường ---------- */
+.bk-map {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 0 56px;
+}
+
+.bk-grid {
+    position: relative;
+    display: grid;
+    width: min(540px, calc(100vw - 160px));
+    aspect-ratio: 6 / 5;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #dfe8c8;
+    box-shadow: inset 0 0 0 4px #c6daa8;
+}
+
+.bk-tile {
+    padding: 0;
+    background:
+        radial-gradient(circle at 20% 25%, #fff 1.5px, transparent 2px),
+        radial-gradient(circle at 75% 70%, #f6c9bf 1.5px, transparent 2px),
+        #dfe8c8;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.bk-tile:hover:not(:disabled) .bk-road {
+    filter: brightness(1.04) drop-shadow(0 0 4px rgba(239, 143, 138, 0.5));
+}
+
+.bk-road {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.28s var(--ease);
+}
+
+.bk-endpoint {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    translate: 0 -50%;
+}
+
+.bk-endpoint.shop {
+    left: 0;
+}
+
+.bk-endpoint.house {
+    right: 0;
+}
+
+.bk-endpoint.house.open {
+    animation: bk-hop 0.6s ease-in-out 3;
+}
+
+.bk-rider {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 64px;
+    height: 64px;
+    margin: -44px 0 0 -32px;
+    pointer-events: none;
+}
+
+.bk-rider .bk-cat {
+    width: 52px;
+    height: 52px;
+    margin-left: 6px;
+    animation: none;
+}
+
+.bk-scooter {
+    position: absolute;
+    left: 2px;
+    bottom: -8px;
+    width: 60px;
+    height: 30px;
+}
+
+/* ---------- Khung thoại màu kem (dùng skin="cream") ---------- */
+.dialog-wrap.skin-cream {
+    background: radial-gradient(ellipse at center, rgba(255, 235, 215, 0.25), rgba(90, 60, 40, 0.25));
+}
+
+/* khung thoại đặt trên tường bếp: nền sáng nhẹ quanh khung, không tối */
+.dialog-wrap.skin-cream.at-top {
+    background: radial-gradient(ellipse at 50% 32%, rgba(255, 240, 225, 0.35), transparent 65%);
+}
+
+.dialog-wrap.skin-cream .glass.dialog-card {
+    background: linear-gradient(180deg, #fffdf8, #fff3e8);
+    box-shadow: 0 26px 70px rgba(120, 80, 50, 0.3), 0 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.dialog-wrap.skin-cream .glass.dialog-card::before {
+    background: conic-gradient(from var(--angle), rgba(240, 190, 170, 0.4) 0 55%, #ef8f8a 70%, #f7d27a 80%, rgba(240, 190, 170, 0.4) 92% 100%);
+}
+
+.dialog-wrap.skin-cream .glass.dialog-card::after {
+    background: radial-gradient(320px circle at var(--cx) var(--cy), rgba(255, 220, 200, 0.25), transparent 60%);
+}
+
+.dialog-wrap.skin-cream .dialog-eyebrow {
+    color: #c98a5a;
+}
+
+.dialog-wrap.skin-cream .dialog-title,
+.dialog-wrap.skin-cream .dialog-title.gold {
+    color: #c4655a;
+    text-shadow: none;
+}
+
+.dialog-wrap.skin-cream .dialog-body {
+    color: #5b3a29;
+}
+
+.dialog-wrap.skin-cream .dialog-hint {
+    color: #b08670;
+}
+
+.dialog-wrap.skin-cream .hl {
+    color: #d96f6c;
+    text-shadow: none;
+}
+
+.dialog-wrap.skin-cream .btn-ghost {
+    color: #8a4a3a;
+    border-color: rgba(217, 111, 108, 0.4);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.dialog-wrap.skin-cream .dialog-close {
+    color: #8a4a3a;
+}
+
+/* ---------- Màn 4: gạch món ---------- */
+.bk-note-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #fff;
+    border: 2px solid #f7e4d6;
+    color: #8a4a3a;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.bk-note-btn.on {
+    background: var(--bk-pink-soft);
+    border-color: var(--bk-pink);
+}
+
+.bk-note-btn:disabled {
+    opacity: 0.5;
+}
+
+.bk-ing-btn {
+    position: relative;
+}
+
+.bk-ing-btn.noting {
+    border-style: dashed;
+}
+
+.bk-ing-btn.crossed::after {
+    content: '';
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    top: 38%;
+    height: 3px;
+    border-radius: 2px;
+    background: #d96f6c;
+    transform: rotate(-24deg);
+}
+
+.bk-ing-btn.crossed .bk-ing {
+    opacity: 0.3;
+}
+
+/* ---------- Màn 5: số bánh + lớp kem phủ ---------- */
+.bk-round {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    translate: -50% 0;
+    z-index: 3;
+    padding: 3px 14px;
+    border-radius: 999px;
+    background: #fff;
+    color: #d96f6c;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(239, 143, 138, 0.3);
+}
+
+.bk-frosting {
+    position: absolute;
+    top: 6%;
+    bottom: 6%;
+    left: 4%;
+    width: 46.5%;
+    border-radius: 999px 0 0 999px;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+
+.bk-frosting.on {
+    opacity: 1;
+    transform: none;
+}
+
+.bk-frosting svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ---------- Đoạn kết ---------- */
+.bk-stage.leaving {
+    animation: bk-leave 0.6s var(--ease) forwards;
+    pointer-events: none;
+}
+
+@keyframes bk-leave {
+    to {
+        opacity: 0;
+        transform: translateY(-16px) scale(0.96);
+    }
+}
+
+.bk-ending {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 6vh;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.bk-ending .oven {
+    position: relative;
+    width: 300px;
+}
+
+.bk-ending .oven svg {
+    width: 100%;
+    filter: drop-shadow(0 20px 30px rgba(120, 80, 50, 0.25));
+}
+
+.bk-ending .oven-ting {
+    position: absolute;
+    top: -26px;
+    right: -30px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: #fff;
+    color: #d96f6c;
+    font-size: 26px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(239, 143, 138, 0.4);
+}
+
+.bk-ending .steam {
+    position: absolute;
+    top: -6px;
+    width: 18px;
+    height: 46px;
+    border-radius: 50%;
+    border-left: 5px solid rgba(255, 255, 255, 0.9);
+    filter: blur(1px);
+    opacity: 0;
+}
+
+.bk-ending .flash {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+}
+
+.bk-ending .photo {
+    width: 260px;
+    padding: 12px 12px 0;
+    background: #fbf8f1;
+    border-radius: 4px;
+    box-shadow: 0 24px 50px rgba(90, 60, 40, 0.35);
+}
+
+.bk-ending .photo-img svg {
+    display: block;
+    width: 100%;
+}
+
+.bk-ending .photo-caption {
+    padding: 10px 0 14px;
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 26px;
+    font-weight: 700;
+    color: #8a4a3a;
+}
+
+.bk-ending .house-scene {
+    position: relative;
+    width: 300px;
+    height: 280px;
+    perspective: 600px;
+}
+
+.bk-ending .house-front {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 260px;
+}
+
+.bk-ending .door {
+    position: absolute;
+    left: 140px;
+    top: 152px;
+    width: 52px;
+    height: 104px;
+    border-radius: 10px 10px 0 0;
+    background: #ef8f8a;
+    transform-origin: left center;
+    box-shadow: inset 0 0 0 4px #d96f6c;
+}
+
+.bk-ending .door span {
+    position: absolute;
+    right: 8px;
+    top: 52px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #f7d27a;
+}
+
+.bk-ending .cat-at-door {
+    position: absolute;
+    left: 50px;
+    bottom: -4px;
+    width: 92px;
+}
+
+.bk-ending .cat-at-door .bk-cat {
+    width: 92px;
+    height: 92px;
+    animation: bk-hop 0.7s ease-in-out infinite;
+}
+
+.bk-ending .box {
+    position: absolute;
+    left: 140px;
+    bottom: -6px;
+    width: 64px;
+    height: 48px;
+}
+
+.bk-ending .box-body {
+    position: absolute;
+    inset: 10px 0 0;
+    border-radius: 6px;
+    background: #fff4e6;
+    box-shadow: inset 0 0 0 3px #e5c3a3;
+}
+
+.bk-ending .ribbon {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    margin-left: -5px;
+    background: #ef8f8a;
+}
+
+.bk-ending .lid {
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: 0;
+    height: 14px;
+    border-radius: 5px;
+    background: #fde3dd;
+    box-shadow: inset 0 0 0 3px #e5a59a;
+    z-index: 1;
+}
+
+.bk-ending .card {
+    position: absolute;
+    left: 120px;
+    bottom: 10px;
+    width: 104px;
+    opacity: 0;
+    text-align: center;
+}
+
+.bk-ending .card svg {
+    width: 100%;
+    filter: drop-shadow(0 10px 20px rgba(217, 111, 108, 0.4));
+}
+
+.bk-ending .card span {
+    display: block;
+    margin-top: -4px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 20px;
+    font-weight: 700;
+    color: #8a4a3a;
+}
+
+/* =========================================================================
+   Bảng màu thống nhất + viền nâu như nét vẽ Bé Corgi
+   kem đào · caramel · hồng san hô · vàng bơ · xanh lá xô thơm · nâu đậm
+   ========================================================================= */
+.bk-screen {
+    --bk-ink: #5b3a29;
+    --bk-cream: #fff7ec;
+    --bk-pink: #ef8f8a;
+    --bk-pink-soft: #fde3dd;
+    --bk-brown: #5b3a29;
+}
+
+.bk-card {
+    background: #fffaf2;
+    border: 3px solid var(--bk-ink);
+    box-shadow: 0 7px 0 rgba(91, 58, 41, 0.18), 0 22px 50px rgba(120, 80, 50, 0.18);
+}
+
+.bk-bubble,
+.bk-bubble::before {
+    border-color: var(--bk-ink);
+}
+
+.bk-bubble {
+    border-width: 2.5px;
+}
+
+.bk-bubble::before {
+    border-left-width: 2.5px;
+    border-bottom-width: 2.5px;
+}
+
+.btn-pink {
+    background: var(--bk-pink);
+    color: #fff;
+    text-shadow: none;
+    border: 2.5px solid var(--bk-ink);
+    box-shadow: 0 4px 0 var(--bk-ink);
+}
+
+.btn-pink:hover {
+    background: #f39b96;
+    box-shadow: 0 5px 0 var(--bk-ink);
+}
+
+.btn-pink:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--bk-ink);
+}
+
+.bk-ing-btn {
+    border-color: #e9d6c2;
+    background: #fffdf8;
+}
+
+.bk-ing-btn:hover:not(:disabled),
+.bk-ing-btn.active {
+    border-color: var(--bk-ink);
+    box-shadow: 0 3px 0 rgba(91, 58, 41, 0.25);
+}
+
+.bk-ing-btn.active {
+    background: var(--bk-pink-soft);
+}
+
+.bk-note-btn {
+    border-color: #e9d6c2;
+    color: var(--bk-ink);
+}
+
+.bk-note-btn.on {
+    border-color: var(--bk-ink);
+}
+
+.bk-row.current {
+    background: #fdebd8;
+}
+
+.bk-slot {
+    border-color: #e9cfb5;
+}
+
+.bk-grid {
+    border: 3px solid var(--bk-ink);
+    box-shadow: none;
+}
+
+.bk-cake {
+    box-shadow: 0 14px 0 #e8b98d, 0 14px 0 3px var(--bk-ink), 0 0 0 3px var(--bk-ink), 0 28px 40px rgba(120, 80, 50, 0.22), inset 0 0 0 8px #f8d9cf;
+}
+
+/* khung thoại kem: viền nâu, tiêu đề san hô đậm */
+.dialog-wrap.skin-cream .glass.dialog-card {
+    background: #fffaf2;
+    border: 3px solid #5b3a29;
+    box-shadow: 0 7px 0 rgba(91, 58, 41, 0.18), 0 26px 60px rgba(90, 60, 40, 0.25);
+}
+
+.dialog-wrap.skin-cream .glass.dialog-card::before {
+    display: none;
+}
+
+.dialog-wrap.skin-cream .dialog-title,
+.dialog-wrap.skin-cream .dialog-title.gold {
+    color: #c4655a;
+}
+
+.dialog-wrap.skin-cream .btn-ghost {
+    color: #5b3a29;
+    border: 2.5px solid #5b3a29;
+    background: #fffaf2;
+}
+
+/* nút về nhà trên nền sáng */
+.bk-screen .icon-btn {
+    color: #5b3a29;
+    background: #fffaf2;
+    border: 2.5px solid #5b3a29;
+    box-shadow: 0 3px 0 rgba(91, 58, 41, 0.25);
+    backdrop-filter: none;
+}
+
+.bk-screen .icon-btn:hover {
+    background: #fde3dd;
+}
+
+/* icon trong lời thoại (tim, lấp lánh…): dịu bớt cho hợp tông san hô ấm */
+.bk-screen .icon,
+.dialog-wrap.skin-cream .icon {
+    filter: saturate(0.65) hue-rotate(-10deg) brightness(1.05);
+}
+
+/* =========================================================================
+   BỘ GIAO DIỆN TIỆM BÁNH — thay cho phong cách "kính mờ lấp lánh" của theme đêm
+   thẻ = giấy kem + dải khăn ca-rô + đường may · nút = bánh quy · hover = nảy dẻo như thạch
+   Dùng cho: màn chơi (.bk-screen), khung thoại kem (.skin-cream), màn chọn màn ban ngày (.on-light)
+   ========================================================================= */
+.bk-screen,
+.dialog-wrap.skin-cream,
+.on-light {
+    --bk-ink: #5b3a29;
+    --bk-paper: #fffaf2;
+    --bk-coral: #ef8f8a;
+    --bk-coral-soft: #fde3dd;
+    --bk-butter: #f7d27a;
+    --bk-gingham: linear-gradient(90deg, rgba(239, 143, 138, 0.55) 50%, transparent 0) 0 0 / 14px 14px,
+        linear-gradient(rgba(239, 143, 138, 0.55) 50%, transparent 0) 0 0 / 14px 14px, #fff;
+    --bk-font: 'Baloo 2', 'Quicksand', system-ui, sans-serif;
+}
+
+@keyframes bk-jelly {
+    0% { transform: scale(1, 1); }
+    30% { transform: scale(1.08, 0.92); }
+    50% { transform: scale(0.95, 1.06); }
+    70% { transform: scale(1.03, 0.98); }
+    100% { transform: scale(1, 1); }
+}
+
+@keyframes bk-wiggle {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-6deg) translateY(-2px); }
+    75% { transform: rotate(6deg) translateY(-2px); }
+}
+
+/* ---------- Bỏ hiệu ứng kính của theme đêm ---------- */
+.dialog-wrap.skin-cream .glass,
+.on-light .glass.level-card {
+    transform: none !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.dialog-wrap.skin-cream .glass::after,
+.on-light .glass.level-card::after,
+.bk-screen .btn::after,
+.dialog-wrap.skin-cream .btn::after,
+.on-light .btn::after {
+    display: none;
+}
+
+/* ---------- Thẻ giấy kem + dải khăn ca-rô + đường may ---------- */
+.bk-card,
+.dialog-wrap.skin-cream .glass.dialog-card,
+.on-light .glass.level-card {
+    position: relative;
+    background: var(--bk-paper);
+    border: 3px solid var(--bk-ink);
+    border-radius: 26px;
+    box-shadow: 0 7px 0 rgba(91, 58, 41, 0.2), 0 24px 50px rgba(120, 80, 50, 0.16);
+    overflow: hidden;
+}
+
+.bk-card {
+    padding-top: 34px;
+}
+
+.dialog-wrap.skin-cream .glass.dialog-card {
+    padding-top: 52px;
+}
+
+.on-light .glass.level-card {
+    padding-top: 38px;
+}
+
+.bk-card::before,
+.dialog-wrap.skin-cream .glass.dialog-card::before,
+.on-light .glass.level-card::before {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 16px;
+    padding: 0;
+    border-radius: 0;
+    background: var(--bk-gingham);
+    border-bottom: 3px solid var(--bk-ink);
+    -webkit-mask: none;
+    mask: none;
+    animation: none;
+    z-index: 1;
+}
+
+/* đường may nét đứt bên trong */
+.bk-card::after,
+.dialog-wrap.skin-cream .glass.dialog-card > div:last-child::before {
+    content: '';
+    position: absolute;
+    inset: 26px 8px 8px;
+    border: 2px dashed rgba(91, 58, 41, 0.14);
+    border-radius: 18px;
+    pointer-events: none;
+}
+
+.dialog-wrap.skin-cream .glass.dialog-card > div:last-child::before {
+    inset: -18px -26px -18px;
+}
+
+/* ---------- Chữ ---------- */
+.dialog-wrap.skin-cream .dialog-title,
+.on-light .level-card .card-name,
+.bk-round,
+.bk-cake-msg {
+    font-family: var(--bk-font);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+.dialog-wrap.skin-cream .dialog-title {
+    font-size: 30px;
+}
+
+.dialog-wrap.skin-cream .dialog-eyebrow,
+.on-light .level-card .card-label {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 999px;
+    background: var(--bk-coral-soft);
+    color: #b5574e;
+    letter-spacing: 0.18em;
+}
+
+/* ---------- Nút bánh quy ---------- */
+.bk-screen .btn,
+.dialog-wrap.skin-cream .btn,
+.on-light .chip {
+    font-family: var(--bk-font);
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    border: 3px solid var(--bk-ink);
+    box-shadow: 0 5px 0 var(--bk-ink), inset 0 -4px 0 rgba(0, 0, 0, 0.08), inset 0 3px 0 rgba(255, 255, 255, 0.45);
+    transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+}
+
+.bk-screen .btn-pink,
+.dialog-wrap.skin-cream .btn-pink,
+.on-light .chip:not(.done) {
+    background: var(--bk-coral);
+    color: #fff;
+    text-shadow: 0 1.5px 0 rgba(91, 58, 41, 0.35);
+}
+
+.dialog-wrap.skin-cream .btn-ghost {
+    background: var(--bk-butter);
+    color: var(--bk-ink);
+}
+
+.bk-screen .btn:hover:not(:disabled),
+.dialog-wrap.skin-cream .btn:hover,
+.card-wrap.interactive:hover .on-light .chip,
+.on-light .card-wrap.interactive:hover .chip {
+    animation: bk-jelly 0.5s ease-out;
+    transform: none;
+    box-shadow: 0 5px 0 var(--bk-ink), inset 0 -4px 0 rgba(0, 0, 0, 0.08), inset 0 3px 0 rgba(255, 255, 255, 0.45);
+}
+
+.bk-screen .btn:active:not(:disabled),
+.dialog-wrap.skin-cream .btn:active {
+    animation: none;
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 var(--bk-ink), inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.bk-screen .btn:disabled {
+    filter: saturate(0.4);
+    opacity: 0.6;
+}
+
+.on-light .chip {
+    padding: 6px 20px;
+    font-size: 14px;
+}
+
+.on-light .chip.done {
+    background: var(--bk-butter);
+    color: var(--bk-ink);
+    border-color: var(--bk-ink);
+}
+
+/* ---------- Thẻ màn (màn chọn màn ban ngày) ---------- */
+.on-light .card-wrap.interactive:hover {
+    transform: translateY(-6px) rotate(-1deg);
+}
+
+.on-light .card-wrap.interactive:hover .level-card {
+    box-shadow: 0 10px 0 rgba(91, 58, 41, 0.22), 0 28px 50px rgba(120, 80, 50, 0.2);
+}
+
+.on-light .level-card .thumb {
+    background: #fff;
+    border: 3px solid var(--bk-ink);
+    box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 8px var(--bk-coral-soft);
+    animation: none;
+}
+
+.on-light .level-card .thumb::after {
+    display: none;
+}
+
+.on-light .card-wrap.interactive:hover .thumb {
+    animation: bk-wiggle 0.6s ease-in-out;
+}
+
+.on-light .level-card .card-date {
+    color: #b07a52;
+}
+
+/* ---------- Ô nguyên liệu / topping = chiếc đĩa nhỏ ---------- */
+.bk-ing-btn {
+    position: relative;
+    border: 2.5px solid var(--bk-ink);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 4px 0 rgba(91, 58, 41, 0.22);
+    font-family: var(--bk-font);
+    font-weight: 700;
+    font-size: 13px;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+}
+
+.bk-ing-btn:hover:not(:disabled) {
+    transform: none;
+    animation: bk-wiggle 0.5s ease-in-out;
+    box-shadow: 0 4px 0 rgba(91, 58, 41, 0.22);
+}
+
+.bk-ing-btn:active:not(:disabled) {
+    animation: none;
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 rgba(91, 58, 41, 0.22);
+}
+
+.bk-ing-btn.active {
+    background: var(--bk-coral-soft);
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(91, 58, 41, 0.22);
+}
+
+/* huy hiệu ✓ khi được chọn */
+.bk-ing-btn.active::before {
+    content: '✓';
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--bk-coral);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    border: 2.5px solid var(--bk-ink);
+}
+
+.bk-ing-btn.used {
+    opacity: 0.4;
+}
+
+.bk-note-btn {
+    border: 2.5px solid var(--bk-ink);
+    background: #fff;
+    box-shadow: 0 3px 0 rgba(91, 58, 41, 0.22);
+    font-family: var(--bk-font);
+    font-weight: 700;
+}
+
+.bk-note-btn:hover:not(:disabled) {
+    animation: bk-jelly 0.45s ease-out;
+}
+
+.bk-note-btn.on {
+    background: var(--bk-butter);
+}
+
+/* ---------- Màn 4: hàng đoán = khuôn bánh ---------- */
+.bk-row.current {
+    background: var(--bk-coral-soft);
+    box-shadow: inset 0 0 0 2.5px var(--bk-ink);
+}
+
+.bk-slot {
+    border: 2.5px dashed #d8b99a;
+    background: #fffdf8;
+}
+
+.bk-slot.filled {
+    border: 2.5px solid var(--bk-ink);
+}
+
+.bk-row.current .bk-slot.filled:hover {
+    animation: bk-wiggle 0.4s;
+}
+
+.bk-row-no {
+    font-family: var(--bk-font);
+    color: #b07a52;
+}
+
+.bk-peg {
+    border-radius: 4px;
+    width: 12px;
+    height: 7px;
+    background: #efe2d4;
+}
+
+.bk-peg.exact {
+    background: var(--bk-butter);
+    box-shadow: 0 0 0 1.5px var(--bk-ink);
+}
+
+.bk-peg.near {
+    background: var(--bk-coral);
+    box-shadow: 0 0 0 1.5px var(--bk-ink);
+}
+
+.bk-pegs {
+    grid-template-columns: repeat(2, 12px);
+    gap: 4px 3px;
+}
+
+/* ---------- Màn 5 & 6 ---------- */
+.bk-round {
+    border: 2.5px solid var(--bk-ink);
+    background: var(--bk-butter);
+    color: var(--bk-ink);
+    box-shadow: none;
+}
+
+.bk-cell.mine:hover:not(:disabled) {
+    background: rgba(239, 143, 138, 0.22);
+    animation: bk-jelly 0.4s;
+}
+
+.bk-tile:hover:not(:disabled) .bk-road {
+    filter: none;
+}
+
+.bk-tile:hover:not(:disabled) {
+    background-color: #eef2df;
+}
+
+/* ---------- Bong bóng thoại ---------- */
+.bk-bubble {
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 4px 0 rgba(91, 58, 41, 0.15);
+}
+
+.bk-bubble .hl {
+    color: #c4655a;
+}
+
+.on-light .level-card .card-name {
+    line-height: 1.2;
+    font-size: 22px;
+}
+
+/* nút "Đã hoàn thành": huy hiệu bánh quy vàng bơ, cùng kiểu nút bánh quy */
+.on-light .chip.done {
+    background: var(--bk-butter);
+    color: var(--bk-ink);
+    text-shadow: none;
+    border: 3px solid var(--bk-ink);
+    box-shadow: 0 5px 0 var(--bk-ink), inset 0 -4px 0 rgba(0, 0, 0, 0.06), inset 0 3px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Khi rê chuột: giữ dải khăn ca-rô (ghi đè viền gradient xoay của theme đêm trong menu.css) */
+.on-light .card-wrap.interactive:hover .glass.level-card::before {
+    background: var(--bk-gingham);
+    animation: none;
+    padding: 0;
+    -webkit-mask: none;
+    mask: none;
+}
+
+/* =========================================================================
+   BỚT VIỀN — chỉ giữ viền nâu ở thẻ chính & nút bánh quy;
+   chi tiết nhỏ dùng bóng mềm / mảng màu thay cho viền
+   ========================================================================= */
+.bk-card::after,
+.dialog-wrap.skin-cream .glass.dialog-card > div:last-child::before {
+    display: none; /* bỏ đường may nét đứt */
+}
+
+.bk-bubble,
+.bk-bubble::before {
+    border-color: transparent;
+}
+
+.bk-bubble {
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(120, 80, 50, 0.12);
+}
+
+.bk-bubble::before {
+    box-shadow: -3px 3px 6px rgba(120, 80, 50, 0.06);
+}
+
+.bk-screen .icon-btn {
+    border: none;
+    background: #fffaf2;
+    box-shadow: 0 3px 10px rgba(120, 80, 50, 0.18);
+}
+
+.bk-ing-btn {
+    border: none;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(120, 80, 50, 0.13), 0 1px 0 rgba(120, 80, 50, 0.08);
+}
+
+.bk-ing-btn:hover:not(:disabled) {
+    box-shadow: 0 6px 16px rgba(120, 80, 50, 0.18);
+}
+
+.bk-ing-btn:active:not(:disabled) {
+    box-shadow: 0 1px 4px rgba(120, 80, 50, 0.15);
+}
+
+.bk-ing-btn.active {
+    background: var(--bk-coral-soft);
+    box-shadow: inset 0 0 0 2px var(--bk-coral), 0 2px 6px rgba(120, 80, 50, 0.12);
+}
+
+.bk-ing-btn.active::before {
+    border: none;
+    box-shadow: 0 2px 6px rgba(217, 111, 108, 0.45);
+}
+
+.bk-note-btn {
+    border: none;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(120, 80, 50, 0.14);
+}
+
+.bk-note-btn.on {
+    background: var(--bk-butter);
+}
+
+.bk-row.current {
+    box-shadow: none;
+}
+
+.bk-slot,
+.bk-slot.filled {
+    border: none;
+    background: #fff;
+    box-shadow: inset 0 0 0 2px #efdcc8;
+}
+
+.bk-slot.filled {
+    box-shadow: 0 2px 6px rgba(120, 80, 50, 0.12);
+}
+
+.bk-peg.exact,
+.bk-peg.near {
+    box-shadow: none;
+}
+
+.bk-round {
+    border: none;
+    box-shadow: 0 2px 6px rgba(120, 80, 50, 0.15);
+}
+
+.bk-grid {
+    border: none;
+    box-shadow: 0 0 0 6px #fff, 0 4px 14px rgba(120, 80, 50, 0.15);
+}
+
+.bk-cake {
+    box-shadow: 0 14px 0 #e8b98d, 0 26px 36px rgba(120, 80, 50, 0.2), inset 0 0 0 8px #f8d9cf;
+}
+
+/* thẻ màn: tem & đĩa không viền */
+.on-light .level-card .thumb {
+    border: none;
+    box-shadow: 0 0 0 6px #fff, 0 0 0 9px var(--bk-coral-soft), 0 6px 14px rgba(120, 80, 50, 0.15);
+}
+
+.on-light .icon-btn {
+    border: none;
+    background: #fffaf2;
+    box-shadow: 0 3px 10px rgba(120, 80, 50, 0.18);
+}
+
+/* ---------- Bé Corgi tương tác (mẹo bí mật) ---------- */
+.bk-pup {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+}
+
+.bk-pup.interactive {
+    cursor: pointer;
+}
+
+.bk-pup-jelly {
+    display: inline-flex;
+    animation: bk-jelly 0.45s ease-out;
+}
+
+.bk-pup.holding .bk-cat {
+    animation: bk-wiggle 0.5s ease-in-out infinite;
+}
+
+/* vòng tiến độ khi giữ: tô đầy theo --hold */
+@property --hold-p {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
+.bk-hold-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: conic-gradient(#ef8f8a var(--hold-p), rgba(239, 143, 138, 0.15) 0);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+    animation: bk-hold-fill var(--hold) linear forwards;
+    pointer-events: none;
+}
+
+@keyframes bk-hold-fill {
+    to {
+        --hold-p: 100%;
+    }
+}
+
+.bk-pat-heart {
+    position: absolute;
+    top: 6px;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    animation: bk-pat-up 0.9s ease-out forwards;
+}
+
+@keyframes bk-pat-up {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(0.6);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-36px) scale(1.1);
+    }
+}
+
+/* màn 6: ô tiệm bánh bấm để xoay */
+.bk-endpoint.shop {
+    cursor: pointer;
+    padding: 0;
+    background: none;
+}

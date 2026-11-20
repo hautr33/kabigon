@@ -2,6 +2,25 @@
    Giao diện chung — phong cách kính mờ lấp lánh (tham khảo trang đăng nhập P.E.A.K)
    Easing chủ đạo: cubic-bezier(0.2, 0.8, 0.2, 1) — ra nhanh, dừng thật êm
    ========================================================================= */
+/* Màu chữ tiêu đề dạng biến có kiểu → chuyển màu mượt (vd: rê sang theme ban ngày) */
+@property --wm-base {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #ffffff;
+}
+
+@property --wm-a {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #c4b5fd;
+}
+
+@property --wm-b {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #f0abfc;
+}
+
 @property --angle {
     syntax: '<angle>';
     inherits: false;
@@ -220,13 +239,14 @@ button {
 .wordmark {
     font-weight: 700;
     line-height: 1.1;
-    background: linear-gradient(110deg, #fff 0%, #fff 38%, #c4b5fd 46%, #fff 50%, #f0abfc 54%, #fff 62%, #fff 100%);
+    background: linear-gradient(110deg, var(--wm-base) 0%, var(--wm-base) 38%, var(--wm-a) 46%, #fff 50%, var(--wm-b) 54%, var(--wm-base) 62%, var(--wm-base) 100%);
     background-size: 260% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     filter: drop-shadow(0 0 18px rgba(167, 139, 250, 0.45));
     animation: focus-in 1.2s var(--ease) 0.15s both, shimmer 5s linear 1.4s infinite;
+    transition: --wm-base 1s ease-in-out, --wm-a 1s ease-in-out, --wm-b 1s ease-in-out;
 }
 
 @keyframes focus-in {
@@ -273,6 +293,17 @@ button {
     }
 }
 
+/* Icon vẽ tay (ui/Icon.tsx) — cao bằng dòng chữ, nằm ngay hàng với chữ.
+   :where() để độ ưu tiên = 0 → class riêng của từng chỗ (vd .pol-lock) luôn ghi đè được kích thước. */
+:where(.icon) {
+    display: inline-block;
+    width: 1.15em;
+    height: 1.15em;
+    vertical-align: -0.2em;
+    flex-shrink: 0;
+    overflow: visible;
+}
+
 /* Đoạn chữ được làm nổi bật trong lời thoại */
 .hl {
     color: var(--gold);
@@ -305,6 +336,44 @@ button {
     box-shadow: none;
     background: #fff;
     clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+.trail-bk {
+    position: fixed;
+    z-index: 50;
+    pointer-events: none;
+    translate: -50% -50%;
+    border-radius: 999px;
+    animation: trail-bk 1.3s cubic-bezier(0.3, 0.6, 0.5, 1) forwards;
+}
+
+.trail-bk.heart {
+    border-radius: 0;
+    clip-path: path('M5 9C2.4 7.2 0 5.5 0 3.1A2.6 2.6 0 0 1 5 2.2 2.6 2.6 0 0 1 10 3.1C10 5.5 7.6 7.2 5 9Z');
+    width: 10px !important;
+    height: 10px !important;
+}
+
+.trail-bk.sugar {
+    border-radius: 2px;
+    background: #fff !important;
+    box-shadow: 0 0 0 1px rgba(91, 58, 41, 0.12);
+}
+
+@keyframes trail-bk {
+    from {
+        opacity: 1;
+        transform: translate(0, 0) rotate(var(--r0)) scale(1);
+    }
+
+    55% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(var(--dx), var(--dy)) rotate(calc(var(--r0) + var(--r1))) scale(0.6);
+    }
 }
 
 @keyframes trail {
@@ -351,3 +420,84 @@ button {
         transition: none !important;
     }
 }
+
+/* ---------- Chữ trên nền sáng (theme ban ngày) — các màu đều chuyển dần ~1 giây ---------- */
+.tagline,
+.home-greet,
+.home-counter,
+.theme-tag,
+.hl,
+.icon-btn {
+    transition: color 1s ease-in-out, text-shadow 1s ease-in-out, background-color 1s ease-in-out, border-color 1s ease-in-out;
+}
+
+.on-light .wordmark {
+    --wm-base: #b5654e;
+    --wm-a: #f2a58c;
+    --wm-b: #f7d27a;
+}
+
+.on-light .tagline,
+.on-light .home-greet,
+.on-light .home-counter,
+.on-light .theme-tag {
+    color: #8a6450;
+    text-shadow: 0 1px 8px rgba(255, 255, 255, 0.9);
+}
+
+.on-light .hl {
+    color: #d96f6c;
+    text-shadow: none;
+}
+
+.on-light .icon-btn {
+    color: #5b3a29;
+    border-width: 2.5px;
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(140, 90, 60, 0.3);
+}
+
+/* Thẻ màn trên nền sáng: kính trắng sữa, chữ nâu hồng */
+.on-light .glass.level-card {
+    background: rgba(255, 252, 247, 0.72);
+    box-shadow: 0 24px 60px rgba(120, 80, 50, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.on-light .level-card .card-name {
+    color: #5b3a29;
+}
+
+.on-light .level-card .card-desc {
+    color: #8a6450;
+}
+
+.on-light .level-card .card-label {
+    color: #d96f6c;
+}
+
+.on-light .level-card .card-date {
+    color: #c98a3a;
+}
+
+.on-light .level-card .thumb {
+    background: radial-gradient(circle at 50% 35%, #fff, #fde3dd 75%);
+    box-shadow: 0 0 0 6px rgba(239, 143, 138, 0.18), inset 0 1px 0 #fff;
+}
+
+.on-light .chip:not(.done) {
+    background: #ef8f8a;
+    color: #fff;
+}
+
+/* Thẻ màn trên nền sáng: viền nâu + bóng phẳng, cùng nét với giao diện Tiệm Bánh Corgi */
+.on-light .glass.level-card {
+    border: 3px solid #5b3a29;
+    box-shadow: 0 7px 0 rgba(91, 58, 41, 0.18), 0 22px 50px rgba(120, 80, 50, 0.18);
+}
+
+
+.on-light .chip:not(.done) {
+    border: 2.5px solid #5b3a29;
+    box-shadow: 0 3px 0 #5b3a29;
+}
+

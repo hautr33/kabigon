@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import { Application, Container } from 'pixi.js';
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { DPR, metrics, type Metrics } from '../metrics';
+import { DPR, dpr, metrics, type Metrics } from '../metrics';
 import { makeSharedArt } from './art';
 
 // Một Pixi canvas duy nhất, toàn màn hình, nằm phía sau giao diện React.
@@ -37,8 +37,16 @@ export function PixiHost({ children }: { children: ReactNode }) {
             gsap.ticker.add(tick);
             setApp(a);
         });
+        // Phóng to / thu nhỏ trình duyệt đổi devicePixelRatio → vẽ lại theo độ phân giải mới cho khỏi mờ
+        const onResize = () => {
+            if (!ready) return;
+            const r = dpr();
+            if (Math.abs(a.renderer.resolution - r) > 0.01) a.renderer.resize(window.innerWidth, window.innerHeight, r);
+        };
+        window.addEventListener('resize', onResize);
         return () => {
             alive = false;
+            window.removeEventListener('resize', onResize);
             gsap.ticker.remove(tick);
             if (ready) a.destroy(true, { children: true });
         };

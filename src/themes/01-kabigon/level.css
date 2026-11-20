@@ -90,7 +90,12 @@
     font-weight: 700;
     color: var(--gold);
     white-space: nowrap;
-    text-shadow: 0 0 10px #f59e0b, 0 0 22px rgba(245, 158, 11, 0.6);
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: rgba(20, 14, 48, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5), 0 0 16px rgba(245, 158, 11, 0.55);
     animation: float-up 1.15s var(--ease) forwards;
 }
 
@@ -111,38 +116,111 @@
     }
 }
 
-/* ---------- Lời nhắn trên màn hình (cutscene) ---------- */
+/* ---------- Lời nhắn trên màn hình (cutscene) — chữ trần, không khung ---------- */
 .caption {
     position: fixed;
     left: 0;
     right: 0;
-    top: 76%;
+    bottom: max(130px, 16vh); /* phía trên Kabigon đứng dưới đồi */
     z-index: 5;
-    text-align: center;
-    font-size: 19px;
-    font-weight: 600;
-    line-height: 1.7;
+    display: flex;
+    justify-content: center;
     padding: 0 24px;
+    pointer-events: none;
 }
 
-.caption .slide {
+/* Màn 2: chữ trần ngay dưới trái tim — không khung, chỉ một vầng tối mờ phía sau cho dễ đọc */
+.caption.plain {
+    bottom: auto;
+}
+
+.caption-plain {
+    position: relative;
+    width: min(760px, 100%);
+    min-height: calc(2 * 1.55em + 16px);
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.caption-plain::before {
+    content: '';
     position: absolute;
-    left: 0;
-    right: 0;
+    inset: -40px -60px;
+    background: radial-gradient(ellipse at center, rgba(8, 4, 26, 0.55), rgba(8, 4, 26, 0.25) 45%, transparent 72%);
+    filter: blur(8px);
+    z-index: -1;
 }
 
-.caption .l1 {
-    color: #ffb7c5;
-    text-shadow: 0 0 12px #ff69b4, 0 0 26px rgba(255, 105, 180, 0.55);
+.caption-plain .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
 }
 
-.caption .l2 {
+.caption-plain .l1 {
+    color: #ffc9de;
+    text-shadow: 0 2px 10px rgba(8, 4, 26, 0.9), 0 0 22px rgba(255, 105, 180, 0.55);
+}
+
+.caption-plain .l2 {
     color: #fff;
-    text-shadow: 0 0 12px #ff69b4, 0 0 26px rgba(255, 105, 180, 0.45);
+    text-shadow: 0 2px 10px rgba(8, 4, 26, 0.9), 0 0 18px rgba(255, 182, 213, 0.45);
 }
 
-.caption-gold {
-    color: var(--gold);
-    text-shadow: 0 0 14px #f59e0b, 0 0 30px rgba(245, 158, 11, 0.5);
-    animation: fade-up 1.2s var(--ease) both;
+/* Màn 3: tông vàng ánh sao */
+.caption-plain.star .l1 {
+    color: #fde68a;
+    text-shadow: 0 2px 10px rgba(8, 4, 26, 0.9), 0 0 22px rgba(251, 191, 36, 0.5);
+}
+
+.caption-plain.star .l2 {
+    color: #fffaf0;
+    text-shadow: 0 2px 10px rgba(8, 4, 26, 0.9), 0 0 18px rgba(253, 230, 138, 0.35);
+}
+
+/* ---------- Nút mở lại khung thoại (khi đang ngắm cutscene) ---------- */
+/* Góc dưới bên phải: không đè lên phụ đề ở giữa */
+.reopen-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 24px 11px 16px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(20, 14, 48, 0.7);
+    border: 1px solid rgba(253, 230, 138, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    animation: fade-up 0.8s var(--ease) 0.4s both;
+    transition: transform 0.2s var(--ease), background 0.2s;
+}
+
+/* Màn 1: giữa màn hình, ngay dưới mặt trăng (chỗ khung thoại vừa ẩn) */
+.reopen-btn.center {
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    translate: -50% 0;
+}
+
+.reopen-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(34, 24, 74, 0.85);
+}
+
+.reopen-btn .icon {
+    width: 22px;
+    height: 22px;
 }

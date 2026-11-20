@@ -9,7 +9,7 @@ import { Emitter } from '../../core/pixi/particles';
 import { NightSky } from '../../core/pixi/sky';
 import { bumpPulse, useHud } from '../../store/hud';
 import { HeartCutscene, LanternCutscene, NameConstellationCutscene, type CutsceneCtx } from './cutscenes';
-import { CONSTELLATION_WORD, FLOATING } from './dialogue';
+import { FLOATING } from './dialogue';
 import { Kabigon } from './kabigon';
 import type { StarLevelConfig } from './levels';
 
@@ -43,6 +43,7 @@ export class StarCatchGame {
     private zzz: Text[];
     private netTrail: Emitter;
     private netSparkle: Emitter;
+    private netGlow = new Sprite(tex('soft-glow')); // quầng sáng vàng nhịp nhàng sau đám mây
     private burst: Emitter;
     private sparks: Emitter;
     private dust: Emitter;
@@ -84,20 +85,26 @@ export class StarCatchGame {
 
         this.net.anchor.set(0.5, 55 / 120);
         this.zzz = [16, 22].map((size, i) => {
-            const t = new Text({ text: i ? 'Z' : 'z', style: { fontFamily: 'Quicksand', fontWeight: '700', fontSize: size * u, fill: 0xffffff } });
+            const t = new Text({ text: i ? 'Z' : 'z', style: { fontFamily: 'Quicksand', fontWeight: '700', fontSize: size * u, fill: 0xe9d5ff, stroke: { color: 0x2b2440, width: 3 * u } } });
             t.anchor.set(0, 1);
             t.alpha = 0.8;
             return t;
         });
 
-        this.netTrail = new Emitter(tex('glow-dot'), { life: 160, scale: 0.3 * u, alpha: 0.35, tint: [0xfde68a] });
-        this.netSparkle = new Emitter(tex('glow-dot'), { life: 140, scale: [0.04 * u, 0.1 * u], tint: [0xffffff] });
+        // Vệt sáng pastel khi mây di chuyển + sao 4 cánh lấp lánh bay lên quanh mây
+        this.netTrail = new Emitter(tex('glow-dot'), { life: 280, scale: 0.34 * u, alpha: 0.22, tint: [0xfde68a, 0xf9a8d4, 0xe9d5ff] });
+        this.netSparkle = new Emitter(tex('spark'), {
+            life: [550, 950], speedX: [-10 * u, 10 * u], speedY: [-32 * u, -8 * u], spin: [-90, 90],
+            scale: [0.18 * u, 0.38 * u], scaleEnd: 0.4, curve: 'pulse', tint: [0xfde68a, 0xf9a8d4, 0xc4b5fd, 0xffffff],
+        });
+        this.netGlow.anchor.set(0.5); this.netGlow.tint = 0xfde68a; this.netGlow.blendMode = 'add';
         const tint = () => this.burstTint;
         this.burst = new Emitter(tex('glow-dot'), { life: 670, speed: [40 * u, 200 * u], gravity: 180 * u, scale: 0.24 * u, tint });
         this.sparks = new Emitter(tex('spark'), { life: 850, speed: [60 * u, 260 * u], spin: [-360, 360], scale: 0.6 * u, tint });
         this.dust = new Emitter(tex('glow-dot'), { life: [600, 1100], speedX: [-8 * u, 8 * u], speedY: [2 * u, 14 * u], scale: [0.06 * u, 0.1 * u], alpha: 0.55 });
 
-        this.actors.addChild(this.dust.view, this.netTrail.view, this.kabi.view, ...this.zzz, this.net, this.netSparkle.view);
+        // Thứ tự vẽ (sau đè trước): vợt mây vàng + vệt sáng nằm SAU Kabigon, chữ "zZ" trên cùng
+        this.actors.addChild(this.dust.view, this.netGlow, this.netTrail.view, this.net, this.netSparkle.view, this.kabi.view, ...this.zzz);
         this.fx.addChild(this.burst.view, this.sparks.view);
         this.view.addChild(this.sky.view, this.actors, this.fx);
         this.emitHud();
@@ -107,6 +114,9 @@ export class StarCatchGame {
     // Điều khiển từ React
     // ------------------------------------------------------------------
     setPointerX(x: number) { this.targetX = x; }
+    // vị trí chuột đầy đủ (cutscene dùng để tương tác, vd: hoa của trái tim né con trỏ)
+    private pointer: { x: number; y: number } | null = null;
+    setPointer(x: number, y: number) { this.pointer = { x, y }; this.targetX = x; }
     setKey(dir: 'left' | 'right', down: boolean) { this.keys[dir] = down; }
 
     start() {
@@ -175,10 +185,13 @@ export class StarCatchGame {
             }
         }
 
+        // Thắng rồi (đang chiếu cutscene): Kabigon đứng yên, không theo chuột / phím nữa
+        if (this.win) this.targetX = this.chibiX;
+
         // Bàn phím
         const kb = 900 * u * (dt / 1000);
-        if (this.keys.left) this.targetX -= kb;
-        if (this.keys.right) this.targetX += kb;
+        if (this.keys.left && !this.win) this.targetX -= kb;
+        if (this.keys.right && !this.win) this.targetX += kb;
         this.targetX = Math.min(Math.max(this.targetX, 50 * u), W - 50 * u);
 
         // Kabigon đi theo
@@ -190,9 +203,9 @@ export class StarCatchGame {
         if (this.emotionMs > 0) { this.emotionMs -= dt; if (this.emotionMs <= 0) this.kabi.setEmotion('normal'); }
         const gy = ground(this.chibiX);
         const chibiY = gy - 18 * u;
-        // vợt bồng bềnh nhẹ theo bước đi
+        // mây bồng bềnh lơ lửng ngay trên đầu Kabigon
         const now = performance.now();
-        const netY = gy - 55 * u + Math.sin(now * 0.004) * 1.5 * u;
+        const netY = gy - 86 * u + Math.sin(now * 0.0025) * 3 * u;
         this.netY = netY;
 
         this.kabi.update(dt, vx, u);
@@ -202,16 +215,21 @@ export class StarCatchGame {
         const zOff = Math.sin(now * 0.002) * 4 * u;
         const showZ = this.emotionMs <= 0 && !this.win;
         this.zzz[0].visible = this.zzz[1].visible = showZ;
-        this.zzz[0].position.set(this.chibiX - 35 * u, chibiY - 35 * u + zOff);
-        this.zzz[1].position.set(this.chibiX - 45 * u, chibiY - 50 * u + zOff * 1.2);
+        // bên trái đầu, dưới đám mây (không đè lên mây)
+        this.zzz[0].position.set(this.chibiX - 58 * u, chibiY - 22 * u + zOff);
+        this.zzz[1].position.set(this.chibiX - 74 * u, chibiY - 36 * u + zOff * 1.2);
 
         this.net.visible = !this.win;
         this.net.position.set(this.chibiX, netY);
         this.net.scale.set(u);
-        this.net.rotation = -vx * 0.01 / u; // vợt nghiêng theo quán tính
+        this.net.rotation = -vx * 0.01 / u + Math.sin(now * 0.0015) * 0.04; // nghiêng theo quán tính + đung đưa nhẹ
+        this.netGlow.visible = !this.win;
+        this.netGlow.position.set(this.chibiX, netY);
+        this.netGlow.scale.set((150 * u * (1 + 0.06 * Math.sin(now * 0.003))) / 128);
+        this.netGlow.alpha = 0.28 + 0.1 * Math.sin(now * 0.003);
         if (!this.win) {
             this.netTrail.emit(this.chibiX, netY, 1);
-            for (let i = 0; i < 2; i++) this.netSparkle.emit(this.chibiX + (Math.random() - 0.5) * 70 * u, netY + (Math.random() - 0.5) * 40 * u, 1);
+            if (Math.random() < 0.3) this.netSparkle.emit(this.chibiX + (Math.random() - 0.5) * 100 * u, netY + (Math.random() - 0.5) * 50 * u, 1);
         }
         [this.netTrail, this.netSparkle, this.burst, this.sparks, this.dust].forEach((e) => e.update(dt));
         this.hearts?.update(dt);
@@ -385,9 +403,10 @@ export class StarCatchGame {
             onText: () => this.ev.winText(),
             from: { x: this.chibiX, y: this.netY },
             dust: this.dust,
+            pointer: () => this.pointer,
         };
         const kind = this.cfg.cutscene;
-        this.cutscene = kind === 'constellation' ? new NameConstellationCutscene(ctx, CONSTELLATION_WORD) : kind === 'heart' ? new HeartCutscene(ctx) : new LanternCutscene(ctx);
+        this.cutscene = kind === 'constellation' ? new NameConstellationCutscene(ctx) : kind === 'heart' ? new HeartCutscene(ctx) : new LanternCutscene(ctx);
         this.view.addChildAt(this.cutscene.back, 1); // ngay sau bầu trời
         this.view.addChild(this.cutscene.front);
         if (this.cutscene.keepKabigon) { this.kabi.setEmotion('happy'); this.emotionMs = Infinity; }

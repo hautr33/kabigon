@@ -8,11 +8,11 @@ export type Emotion = 'normal' | 'happy' | 'sad';
 // rồi chuyển động bằng toán + GSAP — mượt như hoạt ảnh xương (Spine) mà không cần phần mềm ngoài.
 //
 //   root (vị trí, hướng mặt, nghiêng người)
-//    ├─ footL, footR            (đứng yên trên mặt đất, nhấc lên khi bước)
-//    └─ body (co giãn khi thở / nhún)
-//        ├─ earL, earR          (đung đưa, vểnh lên khi vui, cụp khi buồn)
-//        ├─ torso, belly, face
-//        └─ armL, armR          (vung khi đi, giơ lên khi vui)
+//    ├─ body (co giãn khi thở / nhún)
+//    │   ├─ earL, earR          (đung đưa, vểnh lên khi vui, cụp khi buồn)
+//    │   ├─ torso, belly, face
+//    │   └─ armL, armR          (vung khi đi, giơ lên khi vui)
+//    └─ footL, footR            (trước thân để thấy đệm thịt hồng; nhấc lên khi bước)
 //
 // Toạ độ các bộ phận theo khung vẽ gốc 110x110, tâm (55,57) — như bản vẽ Canvas ban đầu.
 export class Kabigon {
@@ -44,8 +44,6 @@ export class Kabigon {
             parent.addChild(c);
             return c;
         };
-        this.footL = part('footL', -22, 35, this.view);
-        this.footR = part('footR', 22, 35, this.view);
         this.view.addChild(this.body);
         this.body.pivot.set(0, 42); // co giãn quanh đáy bụng
         this.body.position.set(0, 42);
@@ -57,6 +55,8 @@ export class Kabigon {
         this.face = faceBox.children[0] as Sprite;
         this.armL = part('armL', -28, 5, this.body);
         this.armR = part('armR', 28, 5, this.body);
+        this.footL = part('footL', -22, 35, this.view);
+        this.footR = part('footR', 22, 35, this.view);
     }
 
     setEmotion(e: Emotion) {

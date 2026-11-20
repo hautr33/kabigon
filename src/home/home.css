@@ -1,0 +1,353 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+    gap: clamp(16px, 4vh, 40px);
+    padding: 7vh 0 6vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.home::-webkit-scrollbar {
+    display: none;
+}
+
+/* ---------- Tiêu đề ---------- */
+.home-head {
+    text-align: center;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.home-greet {
+    white-space: nowrap; /* luôn 1 dòng */
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(224, 212, 252, 0.8);
+}
+
+.home-title {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.03em;
+}
+
+/* Chỉ làm mờ → rõ (không dùng transform, để GSAP còn làm số 6 nảy được) */
+.home-title .six {
+    animation: six-in 1.2s ease-out 0.6s both;
+}
+
+@keyframes six-in {
+    from {
+        opacity: 0;
+    }
+}
+
+/* Xuống dòng thành "Mùng 6 / Của Trăm" trên màn hẹp, không cắt giữa cụm */
+.nowrap {
+    white-space: nowrap;
+}
+
+/* Số 6 — màu riêng (không dùng chữ gradient của wordmark) để còn nảy được khi bấm */
+.six {
+    display: inline-block;
+    color: var(--gold);
+    -webkit-text-fill-color: var(--gold);
+    text-shadow: 0 0 18px rgba(251, 191, 36, 0.7);
+    cursor: pointer;
+    user-select: none;
+    padding: 0 0.04em;
+}
+
+.home-counter {
+    white-space: nowrap; /* luôn 1 dòng */
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.72);
+    font-variant-numeric: tabular-nums;
+}
+
+.home-counter .hl {
+    animation: none;
+}
+
+/* ---------- Chế độ mùng 6 ---------- */
+.mung6 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.mung6-banner {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 0 12px rgba(251, 191, 36, 0.7);
+}
+
+.envelope {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 22px 10px 14px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(244, 114, 182, 0.35), rgba(251, 191, 36, 0.35));
+    border: 1px solid rgba(253, 230, 138, 0.55);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.5);
+    animation: envelope-ping 2.2s ease-out infinite;
+    transition: transform 0.2s var(--ease);
+}
+
+.envelope:hover {
+    transform: translateY(-2px) scale(1.03);
+}
+
+.envelope-icon {
+    width: 26px;
+    height: 26px;
+    animation: heartbeat 1.4s ease-in-out infinite;
+}
+
+@keyframes envelope-ping {
+    0% {
+        box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.5);
+    }
+
+    80%,
+    100% {
+        box-shadow: 0 0 0 16px rgba(251, 191, 36, 0);
+    }
+}
+
+/* ---------- Dây đèn ---------- */
+.pol-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    flex-shrink: 0;
+}
+
+.pol-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.pol-line {
+    position: relative;
+    margin: 0 auto;
+}
+
+.pol-wire {
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: visible;
+}
+
+.pol-wire path {
+    fill: none;
+    stroke: rgba(224, 212, 252, 0.45);
+    stroke-width: 1.5;
+}
+
+.bulb {
+    position: absolute;
+    width: 8px;
+    height: 11px;
+    margin: -1px 0 0 -4px;
+    border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    background: rgba(140, 130, 180, 0.35);
+}
+
+.bulb.lit {
+    --c: #fde68a;
+    background: var(--c);
+    box-shadow: 0 0 6px 1px var(--c), 0 0 18px 4px color-mix(in srgb, var(--c) 45%, transparent);
+    animation: bulb 2.4s ease-in-out infinite;
+}
+
+.bulb.lit.h1 {
+    --c: #f9a8d4;
+}
+
+.bulb.lit.h2 {
+    --c: #c4b5fd;
+}
+
+.bulb.lit.h3 {
+    --c: #99f6e4;
+}
+
+@keyframes bulb {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.55;
+    }
+}
+
+/* ---------- Ảnh polaroid ---------- */
+.pol-hang {
+    position: absolute;
+}
+
+.pol-swing {
+    transform-origin: 50% 0;
+    animation: swing 5.5s ease-in-out infinite;
+}
+
+@keyframes swing {
+
+    0%,
+    100% {
+        transform: rotate(-2.2deg);
+    }
+
+    50% {
+        transform: rotate(2.2deg);
+    }
+}
+
+.pol-swing:has(.polaroid.open:hover) {
+    animation-play-state: paused;
+}
+
+/* Kẹp gỗ */
+.pol-peg {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 12px;
+    height: 26px;
+    margin: 0 auto -14px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #c8a27a, #e7c9a2 50%, #b88e64);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.polaroid {
+    padding: 10px 10px 0;
+    background: #fbf8f1;
+    border-radius: 3px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+    cursor: pointer;
+}
+
+.polaroid.open:hover {
+    transform: translateY(6px) rotate(0deg) scale(1.05);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55), 0 0 0 2px var(--accent), 0 0 40px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.pol-photo {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #14112e;
+}
+
+.pol-photo > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Ánh sáng lướt qua ảnh khi rê chuột */
+.pol-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.35) 45%, transparent 60%);
+    transform: translateX(-100%);
+    transition: transform 0.9s var(--ease);
+    pointer-events: none;
+}
+
+.polaroid.open:hover .pol-photo::after {
+    transform: translateX(100%);
+}
+
+.pol-mystery {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 50% 40%, #2a2550, #0d0b1f 75%);
+}
+
+.pol-mystery span {
+    font-size: 64px;
+    font-weight: 700;
+    color: rgba(196, 181, 253, 0.55);
+    text-shadow: 0 0 24px rgba(139, 61, 255, 0.6);
+    animation: float 5s ease-in-out infinite;
+}
+
+.pol-lock {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 24px;
+    height: 24px;
+    opacity: 0.9;
+}
+
+.polaroid.locked {
+    filter: saturate(0.6) brightness(0.88);
+}
+
+.pol-caption {
+    padding: 10px 2px 12px;
+    text-align: center;
+    color: #3b3355;
+}
+
+.pol-name {
+    white-space: nowrap; /* luôn 1 dòng */
+    font-family: 'Dancing Script', cursive;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.pol-sub {
+    white-space: nowrap; /* luôn 1 dòng */
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #7a7194;
+}
+
+.pol-stars .icon {
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0 1px;
+}
+
+@media (max-width: 640px) {
+    .pol-name {
+        font-size: 18px;
+    }
+
+    .pol-sub {
+        font-size: 10px;
+    }
+}
